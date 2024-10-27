@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sudo rm -rf /*</title>
+  <style>
+    /* Global Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #0f0;
+    }
+
+    .container {
+      text-align: center;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: 3.2rem;
+      letter-spacing: 2px;
+      color: #00ff00;
+      animation: flicker 2s infinite alternate;
+      margin: 0;
+    }
+
+    h2 {
+      margin-top: 15px;
+      font-size: 1.4rem;
+      opacity: 0;
+      animation: fade-in 2s 2s forwards;
+      color: #0a0;
+    }
+
+    .sub-text {
+      margin-top: 10px;
+      font-size: 1.1rem;
+      color: rgba(0, 255, 0, 0.7);
+      opacity: 0.9;
+      animation: flicker 4s 2s infinite alternate;
+    }
+
+    .matrix-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      background-color: black;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    /* Typing Effect */
+    @keyframes fade-in {
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Flicker Animation */
+    @keyframes flicker {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.6;
+      }
+      70% {
+        opacity: 0.85;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>ACCESS GRANTED</h1>
+  <h2>Welcome,<span style="color: red;">Hacker</span>!</h2>
+  <!-- <p class="sub-text">Establishing secure connection...</p> -->
+</div>
+
+<div class="matrix-background">
+  <canvas id="matrixCanvas"></canvas>
+</div>
+
+<script>
+  /* Matrix Effect JavaScript */
+  const canvas = document.getElementById('matrixCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // Set canvas size to screen dimensions
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const matrixChars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&';
+  const fontSize = 18;
+  const columns = canvas.width / fontSize;
+  const drops = Array(Math.floor(columns)).fill(1);
+
+  function drawMatrix() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#0f0'; // Green characters
+    ctx.font = fontSize + 'px monospace';
+
+    drops.forEach((y, index) => {
+      const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+      const x = index * fontSize;
+
+      ctx.fillText(text, x, y * fontSize);
+
+      if (y * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[index] = 0; // Reset the drop
+      }
+      drops[index]++;
+    });
+  }
+
+  setInterval(drawMatrix, 50);
+
+  // Resize canvas when window size changes
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+
+
+  // Disable Right-Click
+  document.addEventListener('contextmenu', (event) => event.preventDefault());
+
+  // Disable F12, Ctrl+Shift+I, Ctrl+Shift+C, Ctrl+U (View Source)
+  document.onkeydown = function (event) {
+    if (
+      event.key === 'F12' || 
+      (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'C')) || 
+      (event.ctrlKey && event.key === 'U')
+    ) {
+      event.preventDefault();
+      return false;
+    }
+  };
+
+  // Detect DevTools Opening (optional deterrent)
+  let devtoolsOpen = false;
+  const element = new Image();
+  Object.defineProperty(element, 'id', {
+    get: function () {
+      devtoolsOpen = true;
+      alert("DevTools is disabled on this page.");
+    }
+  });
+
+  setInterval(() => {
+    devtoolsOpen = false;
+    console.log(element);
+    if (devtoolsOpen) {
+      window.location.reload(); // Optional: Reload page if DevTools is open
+    }
+  }, 1000);
+
+   // Function to open the page in fullscreen mode
+   function openFullscreen() {
+    const elem = document.documentElement; // Select the entire document
+
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { // For Safari
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { // For IE/Edge
+      elem.msRequestFullscreen();
+    }
+  }
+
+  // Attach fullscreen activation to user interactions
+  function activateFullscreenOnInteraction() {
+    openFullscreen(); // Try fullscreen on first interaction
+
+    // Remove event listeners after fullscreen is triggered
+    document.removeEventListener('click', activateFullscreenOnInteraction);
+    document.removeEventListener('keydown', activateFullscreenOnInteraction);
+  }
+
+  // Add click and keydown listeners to trigger fullscreen mode
+  document.addEventListener('click', activateFullscreenOnInteraction);
+  document.addEventListener('keydown', activateFullscreenOnInteraction);
+  </script>
+  
+
+</body>
+</html>
